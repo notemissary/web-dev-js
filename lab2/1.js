@@ -32,8 +32,6 @@ function MorseToHuman(someString) {
             if(lib.hasOwnProperty(key)) {
                 if (lib[key] === stringArr[i]) {
                     result.push(key);
-                } else {
-                    return "Error: unknown code '" + stringArr[i] + "'";
                 }
             } else {
                 return "Error: unknown error";
