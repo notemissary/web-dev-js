@@ -1,11 +1,25 @@
 try {
-    let time = Date.now();
+    let current, current2;
+    let flag = true;
+    let time = Number.MAX_SAFE_INTEGER;
     while (true) {
-        if (Date.now() - time < 3) {
-            console.log(Math.random());
+        if (flag) {
             time = Date.now();
-        } else {
-            throw new Error("Infinite loop I guess!");
+        }
+        console.log(Math.random());
+        if (!current)
+            current = Date.now();
+        else {
+            current2 = Date.now();
+            if (current2 - current > time) {
+                throw new Error("Infinite loop, execution stopped")
+            } else {
+                current = current2;
+            }
+        }
+        if (flag) {
+            time = 10 * (Date.now() - time);
+            flag = false;
         }
     }
 } catch (e) {
