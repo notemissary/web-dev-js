@@ -12,6 +12,7 @@
   "devDependencies": {
     "express": "^4.16.4",
     "typescript": "^3.5.0-dev.20190409",
-    "fs": "^0.0.1-security"
+    "fs": "^0.0.1-security",
+    "greenlock-express": "^2.7.6"
   }
 }

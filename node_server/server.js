@@ -1,9 +1,7 @@
-const http = require('http');
-const express = require('express');
-const app = express();
-const fs = require("fs");
-
-http.createServer(app).listen(3000);
+// app.use(express.static('static'));
+// app.get('/health-check', (req, res) => res.sendStatus(200));
+//
+// http.createServer(app).listen(443);
 
 // app.post('/asd', function() {
 //     console.log("Server is listening to port:3000");
@@ -18,6 +16,22 @@ http.createServer(app).listen(3000);
 //     console.log(req.body);
 //     res.status(200).send("hello world");
 // });
+
+
+var express = require('express');
+var https = require('https');
+var http = require('http');
+var fs = require('fs');
+var app = express();
+
+var options = {
+    key: fs.readFileSync('keys/localhost.key'),
+    cert: fs.readFileSync('keys/localhost.crt')
+};
+
+http.createServer(app).listen(80);
+https.createServer(options, app).listen(443);
+
 
 app.get("/*", function(req, res){
     console.log(req.body);
