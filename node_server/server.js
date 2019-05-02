@@ -1,40 +1,27 @@
-// app.use(express.static('static'));
-// app.get('/health-check', (req, res) => res.sendStatus(200));
-//
-// http.createServer(app).listen(443);
+const express = require('express');
+const https = require('https');
+const http = require('http');
+const fs = require('fs');
+const app = express();
+const MongoClient = require("mongodb").MongoClient;
+const rp = require('request-promise');
+const $ = require('cheerio');
+const url = 'https://thebestmotherfucking.website/';
+let index_html;
+let links = [];
+let imgs = [];
+let scripts = [];
 
-// app.post('/asd', function() {
-//     console.log("Server is listening to port:3000");
-// });
-//
-// app.get("/asd", function(req, res) {
-//     console.log(req.body);
-//     res.status(200).send(req.body);
-// });
-//
-// app.get("/", function(req, res){
-//     console.log(req.body);
-//     res.status(200).send("hello world");
-// });
-
-
-var express = require('express');
-var https = require('https');
-var http = require('http');
-var fs = require('fs');
-var app = express();
-
-var options = {
+const options = {
     key: fs.readFileSync('keys/localhost.key'),
     cert: fs.readFileSync('keys/localhost.crt')
 };
 
-http.createServer(app).listen(80);
+// http.createServer(app).listen(80);
 https.createServer(options, app).listen(443);
 
-
 app.get("/*", function(req, res){
-    console.log(req.body);
+    console.log(req.url);
     if (req.url.startsWith("/public/")) {
         let filePath = req.url.substr(1);
         fs.readFile(filePath, function (error, data) {
@@ -52,5 +39,69 @@ app.get("/*", function(req, res){
 
 function f404(res){
     res.statusCode = 404;
-    res.end("Response not found!");
+    res.end("404: Response not found!");
 }
+
+rp(url)
+    .then(function(html){
+        //success!
+        index_html = html;
+        let item;
+        let request;
+        for (let i = 0; i < $('link', html).length; i++) {
+            item = $('link', html)[i].attribs.href;
+            if (item && !(item.toString().startsWith("https://")
+                || item.toString().startsWith("http://"))) {
+                links.push(url.concat(item));
+                request = https.get(url.concat(item), function(response) {
+                    response.pipe(fs.createWriteStream("public/".concat(item)));
+                });
+            }
+        }
+        for (let i = 0; i < $('img', html).length; i++) {
+            item = $('img', html)[i].attribs.src;
+            if (item && !(item.toString().startsWith("https://")
+                || item.toString().startsWith("http://"))) {
+                imgs.push(url.concat(item));
+                request = https.get(url.concat(item), function(response) {
+                    response.pipe(fs.createWriteStream("public/".concat(item)));
+                });
+            }
+        }
+        // for (let i = 0; i < $('script', html).length; i++) {
+        //     item = $('script', html)[i].attribs;
+        //     // if (item && !(item.toString().startsWith("https://")
+        //     //     || item.toString().startsWith("http://"))) {
+        //     //     scripts.push(item);
+        //     // }
+        //     scripts.push(item);
+        // }
+        console.log(links);
+        console.log(imgs);
+        // console.log(scripts);
+    })
+    .catch(function(err){
+        console.log(err);
+    });
+
+// создаем объект MongoClient и передаем ему строку подключения
+const mongoClient = new MongoClient("mongodb://localhost:27017/", { useNewUrlParser: true });
+
+mongoClient.connect(function(err, client){
+    const db = client.db("websitesdb");
+    const collection = db.collection("websites");
+    let website = {link: url, page: index_html, images: imgs, lnks: links};
+    collection.insertOne(website, function(err, result){
+
+        if(err){
+            return console.log(err);
+        }
+        fs.writeFile('public/index.html', result.ops[0]['page'], (err) => {
+            if (err) throw err;
+            console.log('The file has been saved!');
+        });
+        console.log(result.ops);
+        client.close();
+    });
+});
+
