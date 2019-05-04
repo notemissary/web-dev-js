@@ -17,7 +17,7 @@ const options = {
     cert: fs.readFileSync('keys/localhost.crt')
 };
 
-// http.createServer(app).listen(80);
+http.createServer(app).listen(80);
 https.createServer(options, app).listen(443);
 
 app.get("/*", function(req, res){
@@ -69,12 +69,18 @@ rp(url)
             }
         }
         // for (let i = 0; i < $('script', html).length; i++) {
-        //     item = $('script', html)[i].attribs;
-        //     // if (item && !(item.toString().startsWith("https://")
-        //     //     || item.toString().startsWith("http://"))) {
-        //     //     scripts.push(item);
-        //     // }
-        //     scripts.push(item);
+        // item = $('script', html)[0].children[0].data;
+        // const text = item.match(/var scriptSrc = (.*);/);
+        // eval(text);
+        // console.log(scriptSrc);
+        // request = https.get(url.concat(scriptSrc[0]), function(response) {
+        //     response.pipe(fs.createWriteStream("public/".concat(scriptSrc[0])));
+        // });
+            // if (item && !(item.toString().startsWith("https://")
+            //     || item.toString().startsWith("http://"))) {
+            //     scripts.push(item);
+            // }
+            scripts.push(item);
         // }
         console.log(links);
         console.log(imgs);
@@ -100,7 +106,7 @@ mongoClient.connect(function(err, client){
             if (err) throw err;
             console.log('The file has been saved!');
         });
-        console.log(result.ops);
+        // console.log(result.ops);
         client.close();
     });
 });

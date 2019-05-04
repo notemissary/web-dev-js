@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<storage>
+    <product>
+        <name>Рядовой воины</name>
+        <price>100</price>
+        <amount>500000</amount>
+        <producer>
+            <p_name>Ву</p_name>
+            <p_type>Империя</p_type>
+        </producer>
+        <image>1.jpg</image>
+    </product>
+    <product>
+        <name>Офиер низшего ранга</name>
+        <price>500</price>
+        <amount>200</amount>
+        <producer>
+            <p_name>Хань</p_name>
+            <p_type>Династия</p_type>
+        </producer>
+        <image>2.jpg</image>
+    </product>
+    <product>
+        <name>Кавалерия</name>
+        <price>2000</price>
+        <amount>30000</amount>
+        <producer>
+            <p_name>Шу</p_name>
+            <p_type>Империя</p_type>
+        </producer>
+        <image>3.jpg</image>
+    </product>
+    <product>
+        <name>Флот</name>
+        <price>10000</price>
+        <amount>500</amount>
+        <producer>
+            <p_name>Вей</p_name>
+            <p_type>Империя</p_type>
+        </producer>
+        <image>4.jpg</image>
+    </product>
+    <product>
+        <name>Советник</name>
+        <price>20000</price>
+        <amount>50</amount>
+        <producer>
+            <p_name>Аутсайдер</p_name>
+            <p_type>Монах</p_type>
+        </producer>
+        <image>5.jpg</image>
+    </product>
+</storage>
